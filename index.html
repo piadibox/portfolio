@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio di Francesco Di Iorio — studente, programmatore, appassionato di informatica.">
+  <title>Francesco Di Iorio — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,700&family=Fira+Code:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0C0B0A;
+      --bg-2:        #141210;
+      --bg-3:        #1E1B18;
+      --text:        #E8DFCF;
+      --text-muted:  #6E6559;
+      --accent:      #E8A855;
+      --accent-dim:  rgba(232,168,85,0.12);
+      --accent-2:    #7C8FFF;
+      --border:      #272320;
+      --border-lite: #302C27;
+      --ff-display:  'Fraunces', Georgia, serif;
+      --ff-mono:     'Fira Code', 'Courier New', monospace;
+      --ff-body:     'DM Sans', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-lite) var(--bg);
+    }
+    ::-webkit-scrollbar        { width: 5px; }
+    ::-webkit-scrollbar-track  { background: var(--bg); }
+    ::-webkit-scrollbar-thumb  { background: var(--border-lite); border-radius: 3px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ---------- NAVIGATION ---------- */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s, background .3s, backdrop-filter .3s;
+    }
+    nav.scrolled {
+      border-color: var(--border);
+      background: rgba(12,11,10,.88);
+      backdrop-filter: blur(14px);
+    }
+    .nav-logo {
+      font-family: var(--ff-mono);
+      font-size: .8rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: .05em;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--ff-mono);
+      font-size: .72rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ---------- HERO ---------- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 6rem;
+      position: relative;
+    }
+    .hero-side {
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      align-items: flex-end;
+    }
+    .hero-stat {
+      font-family: var(--ff-mono);
+      font-size: .62rem;
+      color: var(--text-muted);
+      letter-spacing: .07em;
+      text-align: right;
+      line-height: 1.6;
+    }
+    .hero-stat span { display: block; color: var(--text); font-size: .75rem; }
+
+    .hero-tag {
+      font-family: var(--ff-mono);
+      font-size: .72rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp .6s ease .3s forwards;
+    }
+    .hero-name {
+      font-family: var(--ff-display);
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 900;
+      line-height: .9;
+      letter-spacing: -.03em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp .8s ease .5s forwards;
+    }
+    .hero-name em { font-style: italic; color: var(--accent); }
+
+    .hero-sub {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-family: var(--ff-mono);
+      font-size: .9rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: fadeUp .6s ease .8s forwards;
+    }
+    .hero-prompt { color: var(--accent); user-select: none; }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      opacity: 0;
+      animation: fadeIn .6s ease 1.6s forwards;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--border-lite), transparent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .hero-scroll span {
+      font-family: var(--ff-mono);
+      font-size: .6rem;
+      color: var(--text-muted);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- LAYOUT HELPERS ---------- */
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 0 3rem; }
+
+    section { padding: 7rem 3rem; }
+
+    .sec-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .sec-num {
+      font-family: var(--ff-mono);
+      font-size: .65rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      margin-top: .45rem;
+      flex-shrink: 0;
+    }
+    .sec-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+    .sec-title em { font-style: italic; color: var(--accent); }
+
+    /* ---------- ABOUT ---------- */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    #about .col-left { position: sticky; top: 6rem; }
+
+    .about-p {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--text);
+      font-weight: 300;
+    }
+    .about-p + .about-p { margin-top: 1.25rem; }
+    .about-p strong { color: var(--accent); font-weight: 500; }
+
+    .about-details { margin-top: 2.5rem; display: flex; flex-direction: column; gap: .85rem; }
+    .about-detail {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .7rem 1rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .detail-key {
+      font-family: var(--ff-mono);
+      font-size: .62rem;
+      color: var(--text-muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+    .detail-val { font-size: .9rem; color: var(--text); font-weight: 400; }
+
+    /* terminal */
+    .terminal {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .t-bar {
+      background: var(--bg-3);
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-dot:nth-child(1) { background: #FF5F56; }
+    .t-dot:nth-child(2) { background: #FFBD2E; }
+    .t-dot:nth-child(3) { background: #27C93F; }
+    .t-title {
+      font-family: var(--ff-mono);
+      font-size: .62rem;
+      color: var(--text-muted);
+      margin: 0 auto;
+      letter-spacing: .05em;
+    }
+    .t-body { padding: 1.5rem; font-family: var(--ff-mono); font-size: .78rem; line-height: 1.9; }
+    .t-line { display: flex; gap: .75rem; }
+    .t-p  { color: var(--accent); }
+    .t-c  { color: var(--text); }
+    .t-o  { color: var(--text-muted); margin-left: 1.5rem; }
+    .t-o.hi { color: var(--accent-2); }
+    .t-gap { height: .5rem; }
+
+    /* ---------- PROJECTS ---------- */
+    .projects-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .project-item {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 1.3fr;
+      gap: 2rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s;
+    }
+    .project-item:hover {
+      border-color: var(--border-lite);
+      transform: translateY(-2px);
+    }
+
+    .project-media {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      min-height: 320px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .project-media img,
+    .project-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .media-placeholder {
+      font-family: var(--ff-mono);
+      color: var(--text-muted);
+      text-align: center;
+      padding: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .project-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .p-num {
+      font-family: var(--ff-mono);
+      font-size: .62rem;
+      color: var(--text-muted);
+      letter-spacing: .08em;
+      margin-bottom: 1rem;
+    }
+    .p-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .p-desc {
+      font-size: .95rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+    }
+    .p-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+    .tag {
+      font-family: var(--ff-mono);
+      font-size: .68rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(232,168,85,.2);
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      letter-spacing: .05em;
+    }
+    .tag.b {
+      color: var(--accent-2);
+      background: rgba(124,143,255,.1);
+      border-color: rgba(124,143,255,.2);
+    }
+    .p-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .p-link {
+      font-family: var(--ff-mono);
+      font-size: .75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: .05em;
+      transition: color .2s;
+    }
+    .p-link:hover { color: var(--text); }
+
+    .project-empty {
+      display: grid;
+      gap: 1rem;
+      background: var(--bg-2);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      min-height: 220px;
+      align-items: center;
+      justify-items: center;
+      text-align: center;
+    }
+    .project-empty .empty-icon {
+      font-family: var(--ff-mono);
+      font-size: 1.5rem;
+      color: var(--border-lite);
+      margin-bottom: .75rem;
+    }
+    .project-empty .empty-txt {
+      font-family: var(--ff-mono);
+      font-size: .8rem;
+      color: var(--text-muted);
+      letter-spacing: .08em;
+    }
+
+    .projects-note {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.75rem;
+      background: var(--bg-2);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+    }
+    .projects-note p {
+      font-family: var(--ff-mono);
+      font-size: .72rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .projects-note code {
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: .1rem .4rem;
+      border-radius: 3px;
+    }
+
+    /* ---------- SKILLS ---------- */
+    #skills { background: var(--bg-2); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .skill-group {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+    }
+    .sg-title {
+      font-family: var(--ff-mono);
+      font-size: .62rem;
+      color: var(--accent);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sk-list { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+    .sk-item { display: flex; align-items: center; gap: .75rem; font-size: .9rem; color: var(--text); font-weight: 300; }
+    .sk-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .sk-dot.b   { background: var(--accent-2); }
+    .sk-dot.dim { background: var(--border-lite); }
+
+    /* ---------- CONTACT / FOOTER ---------- */
+    #contact { padding: 7rem 3rem 4rem; border-top: 1px solid var(--border); }
+    .contact-big {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: .95;
+      margin-bottom: 3rem;
+    }
+    .contact-big em { font-style: italic; color: var(--accent); }
+
+    .contact-actions { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 6rem; }
+    .btn {
+      font-family: var(--ff-mono);
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-decoration: none;
+      padding: .75rem 1.5rem;
+      border-radius: 4px;
+      transition: all .25s;
+    }
+    .btn.primary { background: var(--accent); color: var(--bg); font-weight: 500; }
+    .btn.primary:hover { background: #f5b870; }
+    .btn.secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border-lite); }
+    .btn.secondary:hover { color: var(--text); border-color: var(--text-muted); }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--ff-mono);
+      font-size: .65rem;
+      color: var(--text-muted);
+      letter-spacing: .05em;
+    }
+
+    /* ---------- ANIMATIONS ---------- */
+    @keyframes fadeUp  { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+    @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    @keyframes pulse   { 0%,100%{opacity:.3;} 50%{opacity:1;} }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      #hero { padding: 0 1.5rem 5rem; }
+      .hero-side { display: none; }
+      section { padding: 5rem 1.5rem; }
+      hr.divider { margin: 0 1.5rem; }
+      #about { grid-template-columns: 1fr; gap: 3rem; }
+      #about .col-left { position: static; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .project-item { grid-template-columns: 1fr; }
+      .project-media { min-height: 220px; }
+      #contact { padding: 5rem 1.5rem 3rem; }
+      footer { flex-direction: column; gap: .75rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">fd.dev</a>
+    <ul class="nav-links">
+      <li><a href="#about">Chi sono</a></li>
+      <li><a href="#projects">Progetti</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contatti</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-side">
+      <div class="hero-stat">data di nascita<span>31 . 08 . 2008</span></div>
+      <div class="hero-stat">citta<span>Bari, IT</span></div>
+      <div class="hero-stat">stato<span>attivo</span></div>
+    </div>
+
+    <p class="hero-tag">// portfolio personale</p>
+    <h1 class="hero-name">Francesco<br><em>Di Iorio</em></h1>
+    <div class="hero-sub">
+      <span class="hero-prompt">~$</span>
+      <span id="typing"></span>
+      <span class="cursor"></span>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="col-left">
+      <div class="sec-header">
+        <span class="sec-num">01 —</span>
+        <h2 class="sec-title">Chi<br><em>sono</em></h2>
+      </div>
+
+      <p class="about-p">
+        Sono uno studente del <strong>Liceo Scientifico Gaetano Salvemini</strong> di Bari,
+        con una forte passione per l'informatica e la programmazione.
+      </p>
+      <p class="about-p">
+        Amo trasformare le idee in codice — che sia un programma, uno script o un progetto
+        piu ambizioso. Scrivere codice non e solo una materia scolastica: e un modo di
+        <strong>pensare</strong> e di risolvere problemi reali.
+      </p>
+      <p class="about-p">
+        Questo spazio e il mio portfolio digitale: raccogliero qui i miei
+        <strong>progetti</strong>, le mie <strong>competenze</strong>
+        e la mia crescita nel tempo.
+      </p>
+
+      <div class="about-details">
+        <div class="about-detail">
+          <span class="detail-key">eta</span>
+          <span class="detail-val" id="age">17 anni</span>
+        </div>
+        <div class="about-detail">
+          <span class="detail-key">scuola</span>
+          <span class="detail-val">LS G. Salvemini, Bari</span>
+        </div>
+        <div class="about-detail">
+          <span class="detail-key">interessi</span>
+          <span class="detail-val">Programmazione, Tech, Problem solving</span>
+        </div>
+        <div class="about-detail">
+          <span class="detail-key">status</span>
+          <span class="detail-val" style="color:var(--accent)">Studente in crescita</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="terminal">
+        <div class="t-bar">
+          <div class="t-dot"></div>
+          <div class="t-dot"></div>
+          <div class="t-dot"></div>
+          <span class="t-title">bash — zsh</span>
+        </div>
+        <div class="t-body">
+          <div class="t-line"><span class="t-p">&#10141;</span><span class="t-c">whoami</span></div>
+          <div class="t-o">Francesco Di Iorio</div>
+          <div class="t-gap"></div>
+
+          <div class="t-line"><span class="t-p">&#10141;</span><span class="t-c">cat info.json</span></div>
+          <div class="t-o">{</div>
+          <div class="t-o">&nbsp; "nome":    "Francesco Di Iorio",</div>
+          <div class="t-o">&nbsp; "nato":    "31 agosto 2008",</div>
+          <div class="t-o">&nbsp; "citta":   "Bari, Puglia",</div>
+          <div class="t-o">&nbsp; "scuola":  "LS G. Salvemini",</div>
+          <div class="t-o hi">&nbsp; "goal":    "crescere ogni giorno"</div>
+          <div class="t-o">}</div>
+          <div class="t-gap"></div>
+
+          <div class="t-line"><span class="t-p">&#10141;</span><span class="t-c">git log --oneline -3</span></div>
+          <div class="t-o hi">a1b2c3d  inizio del percorso...</div>
+          <div class="t-o">f4e5d6c  prime competenze acquisite</div>
+          <div class="t-o">7g8h9i0  curiosita installata :)</div>
+          <div class="t-gap"></div>
+
+          <div class="t-line"><span class="t-p">&#10141;</span><span class="t-c"><span class="cursor" style="background:var(--text-muted)"></span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="sec-header reveal">
+      <span class="sec-num">02 —</span>
+      <h2 class="sec-title">I miei<br><em>progetti</em></h2>
+    </div>
+
+    <div class="projects-grid">
+
+      <!--
+      ================================================================
+      COME AGGIUNGERE UN PROGETTO
+      ================================================================
+      Copia il blocco qui sotto, rimuovi i delimitatori del commento
+      e modifica i campi. Aggiungilo PRIMA dei placeholder.
+
+      <div class="project-item reveal">
+        <div class="project-media">
+          <div class="media-placeholder">Screenshot / GIF qui</div>
+        </div>
+        <div class="project-content">
+          <div>
+            <div class="p-num">project_01</div>
+            <h3 class="p-title">Nome del Progetto</h3>
+            <p class="p-desc">
+              Breve descrizione: cosa fa, come è stato costruito, cosa hai imparato.
+            </p>
+            <div class="p-tags">
+              <span class="tag">Python</span>
+              <span class="tag b">JavaScript</span>
+              <span class="tag">HTML &amp; CSS</span>
+            </div>
+          </div>
+          <div class="p-links">
+            <a href="https://github.com/TUO-USERNAME/REPO" class="p-link">↗ GitHub</a>
+            <a href="#" class="p-link">↗ Demo</a>
+          </div>
+        </div>
+      </div>
+      ================================================================
+      -->
+      <div class="project-item reveal">
+        <div class="project-media">
+          <video autoplay loop muted playsinline>
+    <source src="demo-tracker-dnd-compatto.mp4" type="video/mp4">
+</video>
+        </div>
+        <div class="project-content">
+          <div>
+            <div class="p-num">project_01</div>
+            <h3 class="p-title">Tracker combattimento D&D</h3>
+            <p class="p-desc">
+              Software per gestire il combattimento in Dungeons & Dragons, con gestione di iniziativa,
+              punti ferita e condizioni dei personaggi. Programmato in Python con interfaccia grafica Tkinter,
+              progettato per Dungeon Master che vogliono semplificare la gestione del combattimento.
+            </p>
+            <div class="p-tags">
+              <span class="tag">Python</span>
+              <span class="tag b">Tkinter</span>
+            </div>
+          </div>
+          <div class="p-links">
+            <a href="https://github.com/piadibox/dnd-combat-tracker" class="p-link">↗ GitHub</a>
+            <a href="#" class="p-link">↗ Demo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder cards — verranno sostituiti dai tuoi progetti reali -->
+      <div class="project-empty reveal">
+        <div class="empty-icon">{ }</div>
+        <p class="empty-txt">// prossimo progetto</p>
+      </div>
+      <div class="project-empty reveal" style="transition-delay:.1s">
+        <div class="empty-icon">{ }</div>
+        <p class="empty-txt">// in arrivo...</p>
+      </div>
+      <div class="project-empty reveal" style="transition-delay:.2s">
+        <div class="empty-icon">{ }</div>
+        <p class="empty-txt">// work in progress</p>
+      </div>
+
+    </div><!-- /projects-grid -->
+
+    <div class="projects-note reveal">
+      <p>
+        Sezione in aggiornamento costante — ogni nuovo progetto verra aggiunto qui.<br>
+        
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="sec-header reveal">
+      <span class="sec-num">03 —</span>
+      <h2 class="sec-title">Le mie<br><em>skill</em></h2>
+    </div>
+
+    <div class="skills-grid">
+      <!-- Modifica queste liste con le TUE competenze reali -->
+      <div class="skill-group reveal">
+        <div class="sg-title">// linguaggi</div>
+        <ul class="sk-list">
+          <li class="sk-item"><span class="sk-dot"></span> Python</li>
+          <li class="sk-item"><span class="sk-dot"></span> HTML &amp; CSS</li>
+          <li class="sk-item"><span class="sk-dot b"></span> JavaScript</li>
+          <li class="sk-item"><span class="sk-dot dim"></span> C / C++ (apprendimento)</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal" style="transition-delay:.1s">
+        <div class="sg-title">// strumenti</div>
+        <ul class="sk-list">
+          <li class="sk-item"><span class="sk-dot"></span> Git &amp; GitHub</li>
+          <li class="sk-item"><span class="sk-dot"></span> VS Code</li>
+          <li class="sk-item"><span class="sk-dot b"></span> Linux / Bash</li>
+          <li class="sk-item"><span class="sk-dot dim"></span> Reti &amp; Sistemi</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal" style="transition-delay:.2s">
+        <div class="sg-title">// soft skill</div>
+        <ul class="sk-list">
+          <li class="sk-item"><span class="sk-dot"></span> Problem Solving</li>
+          <li class="sk-item"><span class="sk-dot"></span> Pensiero Logico</li>
+          <li class="sk-item"><span class="sk-dot b"></span> Apprendimento Rapido</li>
+          <li class="sk-item"><span class="sk-dot"></span> Curiosita</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2 class="contact-big reveal">
+      Parliamoci<br><em>pure.</em>
+    </h2>
+
+    <div class="contact-actions reveal">
+      <!-- Cambia con la tua email se vuoi usarne una diversa -->
+      <a href="mailto:francesco.diiorio2008@gmail.com" class="btn primary">&#8599; Scrivimi una mail</a>
+      <!-- Cambia href con il link al tuo profilo GitHub -->
+      <a href="https://github.com/" class="btn secondary">&#8599; GitHub</a>
+    </div>
+
+    <footer>
+      <span id="footer-copy"></span>
+      <span>fatto con passione a Bari</span>
+    </footer>
+  </section>
+
+
+  <script>
+    /* ---- navbar scroll ---- */
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    /* ---- typing effect ---- */
+    const phrases = [
+      'Studente del liceo scientifico',
+      'Appassionato di informatica',
+      'Programmatore in crescita',
+      'Builder di cose belle',
+    ];
+    let pi = 0, ci = 0, deleting = false;
+    const el = document.getElementById('typing');
+
+    function type() {
+      const cur = phrases[pi];
+      if (!deleting) {
+        el.textContent = cur.slice(0, ++ci);
+        if (ci === cur.length) { deleting = true; setTimeout(type, 2200); return; }
+        setTimeout(type, 68);
+      } else {
+        el.textContent = cur.slice(0, --ci);
+        if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(type, 420); return; }
+        setTimeout(type, 36);
+      }
+    }
+    setTimeout(type, 1600);
+
+    /* ---- scroll reveal ---- */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ---- age (auto-aggiornamento) ---- */
+    function calcAge() {
+      const b = new Date(2008, 7, 31);
+      const t = new Date();
+      let age = t.getFullYear() - b.getFullYear();
+      if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) age--;
+      document.getElementById('age').textContent = age + ' anni';
+    }
+    calcAge();
+
+    /* ---- footer copyright (anno dinamico) ---- */
+    document.getElementById('footer-copy').textContent =
+      '© ' + new Date().getFullYear() + ' Francesco Di Iorio — Tutti i diritti riservati';
+  </script>
+</body>
+</html>
