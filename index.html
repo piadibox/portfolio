@@ -324,6 +324,16 @@
       object-fit: cover;
       display: block;
     }
+    .project-media.media-split img {
+      position: absolute;
+      top: 0;
+    }
+    .project-media.media-split img:first-child { left: 0; width: 30%; }
+    .project-media.media-split img:last-child {
+      right: 0;
+      width: calc(70% - 4px);
+      object-position: left center;
+    }
     .media-placeholder {
       font-family: var(--ff-mono);
       color: var(--text-muted);
@@ -715,7 +725,7 @@
         </div>
       </div>
  <!---- =========================================================================================== -->
-      <!-- Placeholder cards — verranno sostituiti dai tuoi progetti reali -->
+
             <div class="project-item reveal">
         <div class="project-media">
           <img src="screenshot-pentagramma-conlezione.png" alt="Screenshot della Web App Pentagramma: pagina lezioni">
@@ -747,10 +757,30 @@
         </div>
       </div>
     <!---- =========================================================================================== -->
-      <div class="project-empty reveal" style="transition-delay:.1s">
-        <div class="empty-icon">{ }</div>
-        <p class="empty-txt">// in arrivo...</p>
+<div class="project-item reveal">
+        <div class="project-media media-split">
+          <img src="foto server.jpg" alt="Foto del server fisico dell'homelab">
+          <img src="screenshot-proxmoxve.png" alt="Screenshot dell'interfaccia di ProxmoxVE">
+        </div>
+        <div class="project-content">
+          <div>
+            <div class="p-num">project_03</div>
+            <h3 class="p-title">Homelab ProxmoxVE</h3>
+            <p class="p-desc">
+             Homelab con ProxmoxVE, con macchine virtuali e container per testare e sperimentare con diversi sistemi operativi, software e penetration testing.
+             Contiene un server di minecraft, un adblocker con Pi-hole, un server cloud personale con Nextcloud, un servizio di streaming multimediale con Plex.
+             Per il penetration testing, ho configurato una VM con Metasploitable2 e un container con DVWA (Damn Vulnerable Web Application) per testare vulnerabilità web.
+            </p>
+            <div class="p-tags">
+              <span class="tag">ProxmoxVE</span>
+              <span class="tag b">Linux</span>
+              <span class="tag">Networking</span>
+            </div>
+          </div>
+
+        </div>
       </div>
+<!---- =========================================================================================== -->
       <div class="project-empty reveal" style="transition-delay:.2s">
         <div class="empty-icon">{ }</div>
         <p class="empty-txt">// work in progress</p>
